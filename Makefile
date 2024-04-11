@@ -11,8 +11,10 @@ help: ## Prints this help.
 	echo $(VERSION) ${VERSION}
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the docker image
-	@docker build \
+build-multi-arch: ## Build the docker image for multiple architectures
+	docker buildx build \
+		--platform=linux/amd64,linux/arm64 \
+		--push \
 		--build-arg NGINX=$(NGINX) \
 		--build-arg GEOIP_MOD=$(GEOIP_MOD) \
 		--build-arg GEOIPUPDATE=$(GEOIPUPDATE) \
